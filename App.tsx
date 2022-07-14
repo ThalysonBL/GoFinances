@@ -2,7 +2,6 @@ import React from 'react';
 
 import  AppLoading from 'expo-app-loading'
 import {ThemeProvider} from 'styled-components';
-
 import {
   useFonts,
   Poppins_400Regular,
@@ -12,6 +11,10 @@ import {
 } from '@expo-google-fonts/poppins'
 
 import theme from './src/global/styles/theme';
+
+import {NavigationContainer} from '@react-navigation/native'
+import {AppRoutes} from './src/Routes/app.routes'
+
 import { Register } from './src/screens/Register';
 
 
@@ -28,7 +31,10 @@ export default function App() {
   }
   return (
     <ThemeProvider theme={theme}>
-      <Register/>
+      <NavigationContainer>
+
+      <AppRoutes/>
+      </NavigationContainer>
       </ThemeProvider>
   );
 }

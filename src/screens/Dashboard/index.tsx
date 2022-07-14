@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionsCard, TransactionsCardProps } from '../../components/TransactionsCard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import 
 { Text
@@ -19,7 +20,8 @@ import {
   Icon,
   Transactions,
   Title,
-  TransactionList
+  TransactionList,
+  LogoutButton
 } from './styles';
 
 export interface DataListProps extends TransactionsCardProps {
@@ -28,37 +30,49 @@ export interface DataListProps extends TransactionsCardProps {
 
 
 export function Dashboard(){
-  const data: DataListProps[] = [{
-    id: '1',
-    type: 'positive',
-    title:"Desenvolvimento de site",
-    amount: "R$12.000,00",
-    category:{
-    name: "Vendas",
-    icon: "dollar-sign"
-    },
-    date:"05/07/2022"
-  },
-  {
-    id: '2',
-    type: 'negative',
-    title:"Hamburgueria",
-    amount: "R$12,00",
-    category:{
-    name: "Alimentação",
-    icon: "coffee"
-    },
-    date:"05/07/2022"},
-    {
-      id: '3',
-      type: 'negative',
-      title:"Aluguel do apartamento",
-      amount: "R$1000,00",
-      category:{
-      name: "Casa",
-      icon: "shopping-bag"
-      },
-      date:"10/04/2022"}]
+    const [data, setData] = useState<DataListProps[]>([]);
+
+    
+    async function loadTransactions(){
+      const dataKey = "@gofinances:transactions" //nome da aplicação
+      const response = await AsyncStorage.getItem(dataKey) // pegando todas as transações do dataKey
+      const transactions = response ? JSON.parse(response) : []; //se transactions receber algum dado transforma em JSON, se não, deixa vázio.
+   
+      const transactionsFormatted: DataListProps[] = transactions
+      .map((item: DataListProps) =>{
+        const amount = Number(item.amount)
+        .toLocaleString('pt-BR', { //transforma o amount em Number //toLocaleString transforma em moeda BRASILEIRA
+          style: 'currency',
+          currency: 'BRL',
+
+        }) 
+  
+        const dateFormatted = Intl.DateTimeFormat('pt-BR', { //Configuração da DATA
+          day: '2-digit',
+          month: '2-digit',
+          year: '2-digit'
+        }).format(new Date(item.date));
+        return {
+          id: item.id,
+          name: item.name,
+          amount,
+          type: item.type,
+          category: item.category,
+          date,
+        }
+      
+      
+      
+      }) //map percorre pelo JSON //cada item é um DataListProps
+
+      
+      setData(transactionsFormatted)
+
+    }
+    useEffect(() =>{
+      AsyncStorage.removeItem("@goFinances:transactions")
+      loadTransactions();
+    }, []) //O array fica vazio para ser executado apenas uma vez
   return(
     <Container>
       
@@ -78,7 +92,11 @@ export function Dashboard(){
                 </UserName>
               </User>
             </UserInfo>
-            <Icon name="power"/>
+
+            <LogoutButton onPress={() => {}}>
+
+              <Icon name="power"/>
+            </LogoutButton>
           </UserWrapper>
         </Header>
         <HightlightCards>

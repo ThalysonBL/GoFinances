@@ -34,7 +34,7 @@ export function TransactionsCard({data} : Props){
     <Container>
       <Title>
         
-        {data.title}
+        {data.name}
       </Title>
 
       <Amount type={data.type}>
