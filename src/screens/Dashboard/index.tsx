@@ -37,7 +37,6 @@ export function Dashboard(){
       const dataKey = "@gofinances:transactions" //nome da aplicação
       const response = await AsyncStorage.getItem(dataKey) // pegando todas as transações do dataKey
       const transactions = response ? JSON.parse(response) : []; //se transactions receber algum dado transforma em JSON, se não, deixa vázio.
-   
       const transactionsFormatted: DataListProps[] = transactions
       .map((item: DataListProps) =>{
         const amount = Number(item.amount)
@@ -58,7 +57,7 @@ export function Dashboard(){
           amount,
           type: item.type,
           category: item.category,
-          date,
+          data,
         }
       
       

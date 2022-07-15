@@ -99,7 +99,7 @@ export function Register(){
       ]
 
       await AsyncStorage.setItem( dataKey, JSON.stringify(dataFormatted));
-      reset()//resetar obj
+      reset()//resetar obj  
        setTransactionType('')
        setCategory({
         key: 'category',
@@ -112,9 +112,15 @@ export function Register(){
       Alert.alert("Não foi possivel salvar")
       
     }
-  }
- 
 
+  }
+  useEffect(() => {
+    async function loadData(){
+      const data = await AsyncStorage.getItem(dataKey);
+      conole.log(JSON.parse(data!))
+    }
+  })
+ 
   
   return(
     <TouchableWithoutFeedback
