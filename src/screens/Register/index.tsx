@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react'; 
 import {
   Modal, 
   TouchableWithoutFeedback, 
@@ -33,7 +33,8 @@ interface FormData {
   amount: string;
 }
 const schema = Yup.object().shape({
-  name: Yup.string().required('Nome é obrigatório'),
+  name: Yup.string()
+  .required('Nome é obrigatório'),
   amount: Yup
   .number()
   .typeError('Informe um valor número')
@@ -44,6 +45,9 @@ const schema = Yup.object().shape({
 export function Register(){
 
 
+
+  const [categoryModalOpen, setCategoryModalOpen] = useState(false)
+  const [transactionType, setTransactionType] = useState('');
 
   const [category, setCategory] = useState({
     key: 'category',
@@ -60,10 +64,7 @@ export function Register(){
   } = useForm({
     resolver: yupResolver(schema) 
   })
-  const [categoryModalOpen, setCategoryModalOpen] = useState(false)
-  const [transactionType, setTransactionType] = useState();
-
-  function handleTransactionTypeSelect(type: 'up' | 'dow'){
+  function handleTransactionTypeSelect(type: 'positive' | 'negative'){
     setTransactionType(type);
   };
   function handleCloseSelectCategoryModal(){
@@ -83,13 +84,14 @@ export function Register(){
       id: String(uuid.v4()), //Já transaforma em string o uuid //v4 retorna um hash
       name: form.name,
       amount: form.amount,
-      transactionType,
+      type: transactionType,
       category: category.key,
       date: new Date()
     }
+
+
     try {
       const dataKey = "@gofinances:transactions" //nome da aplicação
-
       const data = await AsyncStorage.getItem(dataKey) //recupera todos os dados do AsyncStorage
       const currentData = data ? JSON.parse(data) : []; //Se tiver alguma coisa no storage converte em OBJ
       const dataFormatted = [
@@ -114,12 +116,16 @@ export function Register(){
     }
 
   }
-  useEffect(() => {
+    /*useEffect(() =>{
     async function loadData(){
-      const data = await AsyncStorage.getItem(dataKey);
-      conole.log(JSON.parse(data!))
+        const data = await AsyncStorage.getItem(dataKey);
+        console.log(JSON.parse(data!));
     }
-  })
+    loadData();
+    async function removeAll(){
+        await AsyncStorage.removeItem(dataKey);            
+    }
+    removeAll();},[]);*/
  
   
   return(
@@ -152,15 +158,15 @@ export function Register(){
               <TransactionTypeButton
                 type="up"
                 title="Income"
-                onPress={() => handleTransactionTypeSelect('up')}
-                isActive={transactionType === 'up'}
+                onPress={() => handleTransactionTypeSelect('positive')}
+                isActive={transactionType === 'positive'}
               />
 
                 <TransactionTypeButton
                 type="down"
                 title="Outcome"
-                onPress={() => handleTransactionTypeSelect('down')}
-                isActive={transactionType === 'down'}
+                onPress={() => handleTransactionTypeSelect('negative')}
+                isActive={transactionType === 'negative'}
               />
 
               </TransactionsTypes>
