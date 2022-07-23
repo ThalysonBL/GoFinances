@@ -16,6 +16,7 @@ import theme from './src/global/styles/theme';
 
 import {NavigationContainer} from '@react-navigation/native'
 import {AppRoutes} from './src/Routes/app.routes'
+import {SignIn} from './src/screens/SignIn'
 
 import { Dashboard } from './src/screens/Dashboard';
 
@@ -36,7 +37,7 @@ export default function App() {
       <NavigationContainer>
         <StatusBar barStyle="light-content"/>
 
-      <AppRoutes/>
+      <SignIn/> 
       </NavigationContainer>
       </ThemeProvider>
   );

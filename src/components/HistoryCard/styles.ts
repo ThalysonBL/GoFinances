@@ -1,5 +1,5 @@
 import { RFValue } from 'react-native-responsive-fontsize';
-import styled from 'styled-components/';
+import styled from 'styled-components/native';
 
 interface ContainerProps {
   color: string;
