@@ -22,7 +22,7 @@ import {
   LogoutButton,
   LoadContainer
 } from './styles';
-
+import {useAuth} from '../../hooks/auth'
 export interface DataListProps extends TransactionsCardProps {
   id: string;
   
@@ -47,18 +47,24 @@ export function Dashboard(){
 
 
 
-
   function getLastTransactionDate(
     collection: DataListProps[], 
     type: 'positive' | 'negative'){
+
+      const collectionFilgtered =  collection
+      .filter(
+        transaction => transaction.type === type) //Conferir se a última transação é positiva
+        
+        if(collectionFilttered.length === 0){}
+       return 0;
+
      //última transação
      const lastTransaction = 
      new Date(
      Math.max.apply(Math, 
-      collection.filter(
-         (transaction: DataListProps) => transaction.type === type //Conferir se a última transação é positiva
-         ).map(transaction => new Date(transaction.date).getTime())) //percorre o transaction e pega apenas a data do transaction
+      collectionFilttered.map(transaction => new Date(transaction.date).getTime())) //percorre o transaction e pega apenas a data do transaction
        )
+       
 
        return `${lastTransaction.getDate()} de ${lastTransaction.toLocaleString('pt-BR', {month: 'long'})}`
        Intl.DateTimeFormat('pt-BR', { //Configuração da DATA
@@ -74,9 +80,11 @@ export function Dashboard(){
          
   }
   const theme = useTheme()
+  const{signOut, user} = useAuth()
+
     
     async function loadTransactions(){
-      const dataKey = "@gofinances:transactions" //nome da aplicação
+      const dataKey = `@gofinances:transactions_user:${user.id}` //nome da aplicação
       const response = await AsyncStorage.getItem(dataKey) // pegando todas as transações do dataKey
       const transactions = response ? JSON.parse(response) : []; //se transactions receber algum dado transforma em JSON, se não, deixa vázio.
       
@@ -124,7 +132,7 @@ export function Dashboard(){
       setTransactions(transactionsFormatted)
       const lastTransactionEntries = getLastTransactionDate(transactions, 'positive')
       const lastTransactionExpensives = getLastTransactionDate(transactions, 'negative')
-      const totalInterval = `01 a ${lastTransactionExpensives}`
+      const totalInterval = lastTransactionExpensives === 0 ? 'Não há movimentações' : `01 a ${lastTransactionExpensives}`
 
       const total = entriesTotal - expensiveTotal
       setHightlightData({
@@ -133,7 +141,7 @@ export function Dashboard(){
             style: 'currency',
             currency: 'BRL',
           }),
-          lastTransaction: `Última entrada dia ${lastTransactionEntries}`
+          lastTransaction: lastTransactionEntries === 0 ? 'Não há transações' : `Última entrada dia ${lastTransactionEntries}`
 
         },
         expensives: {
@@ -141,11 +149,11 @@ export function Dashboard(){
             style: 'currency',
             currency: 'BRL',
         }),
-        lastTransaction: `Última entrada dia ${lastTransactionExpensives}`,
+        lastTransaction: lastTransactionExpensives ? 'Não há transações' : `Última entrada dia ${lastTransactionExpensives}`,
 
       },
         total: {amount: total.toLocaleString('pt-BR', {
-          style: 'currency',
+          style: 'currency', 
           currency: 'BRL',
           
 
@@ -187,7 +195,7 @@ export function Dashboard(){
                 <UserWrapper>
 
                   <UserInfo>
-                    <Photo source={{ uri:'https://avatars.githubusercontent.com/u/91555797?v=4'}}>
+                    <Photo source={{ uri: user.photo}}>
 
                     </Photo>
                     <User>
@@ -195,12 +203,12 @@ export function Dashboard(){
                         Olá
                       </UserGreeting>
                       <UserName>
-                        Thalyson
+                        {user.name}
                       </UserName>
                     </User>
                   </UserInfo>
 
-                  <LogoutButton onPress={() => {}}>
+                  <LogoutButton onPress={signOut}>
 
                     <Icon name="power"/>
                   </LogoutButton>

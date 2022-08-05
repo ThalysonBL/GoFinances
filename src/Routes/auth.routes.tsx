@@ -6,10 +6,15 @@ import { SignIn} from '../screens/SignIn'
 const {Navigator, Screen} = createStackNavigator();
 
 export function AuthRoutes(){
-  <Navigator>
-    <Screen 
-      name="SignIn"//quando chamar o SignIn
-      component={SignIn} // renderizará esse componente
-    />
-  </Navigator>
+  return(
+
+        <Navigator >
+        <Screen 
+          name="SignIn"//quando chamar o SignIn
+          component={SignIn} // renderizará esse componente
+          options={{
+            headerMode:"false"
+          }}/>
+        </Navigator>
+      )
 }

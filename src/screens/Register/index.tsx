@@ -7,7 +7,7 @@ import {
 } from 'react-native' //Use Modal para criar um modal
 import * as Yup from 'yup'
 import {yupResolver} from '@hookform/resolvers/yup'
-
+import {useAuth} from '../../hooks/auth'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 
@@ -44,6 +44,7 @@ const schema = Yup.object().shape({
 
 export function Register(){
 
+  const { user } = useAuth();
 
 
   const [categoryModalOpen, setCategoryModalOpen] = useState(false)
@@ -91,7 +92,7 @@ export function Register(){
 
 
     try {
-      const dataKey = "@gofinances:transactions" //nome da aplicação
+      const dataKey = `@gofinances:transactions_user:${user.id}` //nome da aplicação
       const data = await AsyncStorage.getItem(dataKey) //recupera todos os dados do AsyncStorage
       const currentData = data ? JSON.parse(data) : []; //Se tiver alguma coisa no storage converte em OBJ
       const dataFormatted = [
@@ -157,14 +158,14 @@ export function Register(){
 
               <TransactionTypeButton
                 type="up"
-                title="Income"
+                title="Entrada"
                 onPress={() => handleTransactionTypeSelect('positive')}
                 isActive={transactionType === 'positive'}
               />
 
                 <TransactionTypeButton
                 type="down"
-                title="Outcome"
+                title="Saída"
                 onPress={() => handleTransactionTypeSelect('negative')}
                 isActive={transactionType === 'negative'}
               />
