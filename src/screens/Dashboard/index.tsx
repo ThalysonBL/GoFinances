@@ -41,7 +41,7 @@ interface HightlightData {
 export function Dashboard(){
     const [transactions, setTransactions] = useState<DataListProps[]>([]);
 
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState('')
   
   const [hightlightData, setHightlightData] = useState<HightlightData[]>({} as HightlightData)
 
@@ -51,7 +51,7 @@ export function Dashboard(){
     collection: DataListProps[], 
     type: 'positive' | 'negative'){
 
-      const collectionFilgtered =  collection
+      const collectionFilttered =  collection
       .filter(
         transaction => transaction.type === type) //Conferir se a última transação é positiva
         
@@ -80,7 +80,7 @@ export function Dashboard(){
          
   }
   const theme = useTheme()
-  const{signOut, user} = useAuth()
+  const{signOut, user} = useAuth();
 
     
     async function loadTransactions(){

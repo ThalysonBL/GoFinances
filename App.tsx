@@ -14,8 +14,8 @@ import {
 
 import theme from './src/global/styles/theme';
 
-import {Routes} from './src/routes'
-import {AppRoutes} from './src/routes/app.routes'
+import Routes from './src/Routes'
+import {AppRoutes} from './src/Routes/app.routes'
 import {SignIn} from './src/screens/SignIn'
 
 import {AuthProvider, useAuth} from './src/hooks/auth'
